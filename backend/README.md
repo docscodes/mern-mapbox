@@ -1,4 +1,5 @@
 ```
-npm i express mongoose
-
+npm init
+npm i express mongoose nodemon
+npm i dotenv
 ```
