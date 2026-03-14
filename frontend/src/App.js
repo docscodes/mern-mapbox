@@ -26,8 +26,9 @@ function App() {
     getPins();
   }, []);
 
-  const handleMarkerClick = (id) => {
+  const handleMarkerClick = (id, lat, long) => {
     setCurrentPlaceId(id);
+    setViewState({ ...viewState, latitude: lat, longitude: long });
   };
 
   const handleAddClick = (e) => {
@@ -46,6 +47,7 @@ function App() {
       mapboxAccessToken={process.env.REACT_APP_MAPBOX}
       style={{ width: "100vw", height: "100vh" }}
       onDblClick={handleAddClick}
+      transitionDuratoin="200"
     >
       {pins.map((pin) => (
         <div key={pin._id}>
@@ -53,7 +55,7 @@ function App() {
             latitude={pin.lat}
             longitude={pin.long}
             color={currentUser === pin.username ? "red" : "blue"}
-            onClick={() => handleMarkerClick(pin._id)}
+            onClick={() => handleMarkerClick(pin._id, pin.lat, pin.long)}
             style={{ cursor: "pointer" }}
           />
           {currentPlaceId === pin._id && (
