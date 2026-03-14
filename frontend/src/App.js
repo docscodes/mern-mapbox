@@ -7,7 +7,7 @@ import { format } from "timeago.js";
 import "./app.css";
 
 function App() {
-  const [currentUsername, setCurrentUsername] = useState("john");
+  const [currentUsername, setCurrentUsername] = useState(null);
   const [pins, setPins] = useState([]);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
@@ -79,7 +79,7 @@ function App() {
           <Marker
             latitude={pin.lat}
             longitude={pin.long}
-            color={currentUsername === pin.username ? "red" : "blue"}
+            color={currentUsername === pin.username ? "tomato" : "slateblue"}
             onClick={() => handleMarkerClick(pin._id, pin.lat, pin.long)}
             style={{ cursor: "pointer" }}
           />
@@ -154,6 +154,14 @@ function App() {
             </div>
           </Popup>
         </>
+      )}
+      {currentUsername ? (
+        <button className="button logout">Logout</button>
+      ) : (
+        <div className="buttons">
+          <button className="button login">Login</button>
+          <button className="button register">Register</button>
+        </div>
       )}
     </Map>
   );
