@@ -10,6 +10,7 @@ function App() {
   const currentUser = "john";
   const [pins, setPins] = useState([]);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
+  const [newPlace, setNewPlace] = useState(null);
 
   const [viewState, setViewState] = useState({
     latitude: 46,
@@ -29,6 +30,14 @@ function App() {
     setCurrentPlaceId(id);
   };
 
+  const handleAddClick = (e) => {
+    const { lng, lat } = e.lngLat;
+    setNewPlace({
+      lat: lat,
+      long: lng,
+    });
+  };
+
   return (
     <Map
       {...viewState}
@@ -36,9 +45,10 @@ function App() {
       mapStyle="mapbox://styles/mapbox/streets-v12"
       mapboxAccessToken={process.env.REACT_APP_MAPBOX}
       style={{ width: "100vw", height: "100vh" }}
+      onDblClick={handleAddClick}
     >
       {pins.map((pin) => (
-        <>
+        <div key={pin._id}>
           <Marker
             latitude={pin.lat}
             longitude={pin.long}
@@ -75,8 +85,20 @@ function App() {
               </div>
             </Popup>
           )}
-        </>
+        </div>
       ))}
+      {newPlace && (
+        <Popup
+          latitude={newPlace.lat}
+          longitude={newPlace.long}
+          closeButton={true}
+          closeOnClick={false}
+          onClose={() => setNewPlace(null)}
+          anchor="left"
+        >
+          hello
+        </Popup>
+      )}
     </Map>
   );
 }
