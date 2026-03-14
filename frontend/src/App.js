@@ -1,16 +1,20 @@
 import { Star } from "@mui/icons-material";
 import axios from "axios";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Map, { Marker, Popup } from "react-map-gl/mapbox";
 import { format } from "timeago.js";
 import "./app.css";
 
 function App() {
-  const currentUser = "john";
+  const [currentUsername, setCurrentUsername] = useState("john");
   const [pins, setPins] = useState([]);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
+
+  const title = useRef(null);
+  const desc = useRef(null);
+  const star = useRef(0);
 
   const [viewState, setViewState] = useState({
     latitude: 46,
@@ -39,6 +43,27 @@ function App() {
     });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const newPin = {
+      username: currentUsername,
+      title: title.current.value,
+      desc: desc.current.value,
+      rating: star.current.value,
+      lat: newPlace.lat,
+      long: newPlace.long,
+    };
+    console.log(newPin);
+
+    try {
+      const res = await axios.post("/pins", newPin);
+      setPins([...pins, res.data]);
+      setNewPlace(null);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Map
       {...viewState}
@@ -54,7 +79,7 @@ function App() {
           <Marker
             latitude={pin.lat}
             longitude={pin.long}
-            color={currentUser === pin.username ? "red" : "blue"}
+            color={currentUsername === pin.username ? "red" : "blue"}
             onClick={() => handleMarkerClick(pin._id, pin.lat, pin.long)}
             style={{ cursor: "pointer" }}
           />
@@ -98,7 +123,35 @@ function App() {
           onClose={() => setNewPlace(null)}
           anchor="left"
         >
-          hello
+          <div>
+            <form onSubmit={handleSubmit}>
+              <label>Title</label>
+              <input
+                placeholder="Enter a title"
+                autoFocus
+                ref={title}
+              />
+              <label>Description</label>
+              <textarea
+                placeholder="Tell us something about this place."
+                ref={desc}
+              />
+              <label>Rating</label>
+              <select ref={star}>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <button
+                type="submit"
+                className="submitButton"
+              >
+                Add Pin
+              </button>
+            </form>
+          </div>
         </Popup>
       )}
     </Map>
