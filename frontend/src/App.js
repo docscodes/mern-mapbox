@@ -5,12 +5,15 @@ import { useEffect, useRef, useState } from "react";
 import Map, { Marker, Popup } from "react-map-gl/mapbox";
 import { format } from "timeago.js";
 import "./app.css";
+import Register from "./components/Register";
 
 function App() {
   const [currentUsername, setCurrentUsername] = useState(null);
   const [pins, setPins] = useState([]);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
 
   const title = useRef(null);
   const desc = useRef(null);
@@ -109,6 +112,7 @@ function App() {
           )}
         </div>
       ))}
+
       {newPlace && (
         <>
           <Marker
@@ -155,14 +159,27 @@ function App() {
           </Popup>
         </>
       )}
+
       {currentUsername ? (
         <button className="button logout">Logout</button>
       ) : (
         <div className="buttons">
-          <button className="button login">Login</button>
-          <button className="button register">Register</button>
+          <button
+            className="button login"
+            onClick={() => setShowLogin(true)}
+          >
+            Login
+          </button>
+          <button
+            className="button register"
+            onClick={() => setShowRegister(true)}
+          >
+            Register
+          </button>
         </div>
       )}
+
+      {showRegister && <Register setShowRegister={setShowRegister} />}
     </Map>
   );
 }
