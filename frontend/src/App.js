@@ -19,7 +19,7 @@ function App() {
   const [viewState, setViewState] = useState({
     latitude: 46,
     longitude: 17,
-    zoom: 4,
+    zoom: 2,
   });
 
   useEffect(() => {
@@ -98,12 +98,7 @@ function App() {
                 <label>Review</label>
                 <p className="desc">{pin.desc}</p>
                 <label>Rating</label>
-                <div className="stars">
-                  <Star className="star" />
-                  <Star className="star" />
-                  <Star className="star" />
-                  <Star className="star" />
-                </div>
+                <div className="stars">{Array(pin.rating).fill(<Star className="star" />)}</div>
                 <label>Information</label>
                 <span className="username">
                   Created by <b>{pin.username}</b>
@@ -115,44 +110,50 @@ function App() {
         </div>
       ))}
       {newPlace && (
-        <Popup
-          latitude={newPlace.lat}
-          longitude={newPlace.long}
-          closeButton={true}
-          closeOnClick={false}
-          onClose={() => setNewPlace(null)}
-          anchor="left"
-        >
-          <div>
-            <form onSubmit={handleSubmit}>
-              <label>Title</label>
-              <input
-                placeholder="Enter a title"
-                autoFocus
-                ref={title}
-              />
-              <label>Description</label>
-              <textarea
-                placeholder="Tell us something about this place."
-                ref={desc}
-              />
-              <label>Rating</label>
-              <select ref={star}>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select>
-              <button
-                type="submit"
-                className="submitButton"
-              >
-                Add Pin
-              </button>
-            </form>
-          </div>
-        </Popup>
+        <>
+          <Marker
+            latitude={newPlace.lat}
+            longitude={newPlace.long}
+          ></Marker>
+          <Popup
+            latitude={newPlace.lat}
+            longitude={newPlace.long}
+            closeButton={true}
+            closeOnClick={false}
+            onClose={() => setNewPlace(null)}
+            anchor="left"
+          >
+            <div>
+              <form onSubmit={handleSubmit}>
+                <label>Title</label>
+                <input
+                  placeholder="Enter a title"
+                  autoFocus
+                  ref={title}
+                />
+                <label>Description</label>
+                <textarea
+                  placeholder="Tell us something about this place."
+                  ref={desc}
+                />
+                <label>Rating</label>
+                <select ref={star}>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+                <button
+                  type="submit"
+                  className="submitButton"
+                >
+                  Add Pin
+                </button>
+              </form>
+            </div>
+          </Popup>
+        </>
       )}
     </Map>
   );
