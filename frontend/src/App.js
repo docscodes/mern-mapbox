@@ -5,10 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import Map, { Marker, Popup } from "react-map-gl/mapbox";
 import { format } from "timeago.js";
 import "./app.css";
+import Login from "./components/Login";
 import Register from "./components/Register";
 
 function App() {
-  const [currentUsername, setCurrentUsername] = useState(null);
+  const myStorage = window.localStorage;
+  const [currentUsername, setCurrentUsername] = useState(myStorage.getItem("user"));
   const [pins, setPins] = useState([]);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
@@ -67,6 +69,11 @@ function App() {
     }
   };
 
+  const handleLogout = () => {
+    myStorage.removeItem("user");
+    setCurrentUsername(null);
+  };
+
   return (
     <Map
       {...viewState}
@@ -80,6 +87,7 @@ function App() {
       {pins.map((pin) => (
         <div key={pin._id}>
           <Marker
+            key={`${pin._id}-${currentUsername}`}
             latitude={pin.lat}
             longitude={pin.long}
             color={currentUsername === pin.username ? "tomato" : "slateblue"}
@@ -161,7 +169,12 @@ function App() {
       )}
 
       {currentUsername ? (
-        <button className="button logout">Logout</button>
+        <button
+          className="button logout"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       ) : (
         <div className="buttons">
           <button
@@ -180,6 +193,13 @@ function App() {
       )}
 
       {showRegister && <Register setShowRegister={setShowRegister} />}
+      {showLogin && (
+        <Login
+          setShowLogin={setShowLogin}
+          setCurrentUsername={setCurrentUsername}
+          myStorage={myStorage}
+        />
+      )}
     </Map>
   );
 }
