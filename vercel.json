@@ -2,7 +2,9 @@
   "buildCommand": "npm install --prefix frontend && npm run build --prefix frontend",
   "outputDirectory": "frontend/build",
   "functions": {
-    "backend/index.js": {}
+    "backend/index.js": {
+      "memory": 1024
+    }
   },
   "rewrites": [
     { "source": "/api/:path*", "destination": "/backend/index.js" },
